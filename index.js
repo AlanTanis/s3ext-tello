@@ -301,15 +301,48 @@ class TelloExtension {
                         default: 'Battery?'
                     }),
                     func: 'getBattery'
-                }
+                },
+                {
+                    opcode: 'getSpeed',
+                    blockType: BlockType.REPORTER,
+
+                    text: formatMessage({
+                        id: 'Tello.getSpeed',
+                        default: 'Motor Speed?'
+                    }),
+                    func: 'getSpeed'
+                },
+                {
+                    opcode: 'getTime',
+                    blockType: BlockType.REPORTER,
+
+                    text: formatMessage({
+                        id: 'Tello.getTime',
+                        default: 'Motor RunTime?'
+                    }),
+                    func: 'getTime'
+                },
+                {
+                    opcode: 'getWifi',
+                    blockType: BlockType.REPORTER,
+
+                    text: formatMessage({
+                        id: 'Tello.getWifi',
+                        default: 'Wifi SNR?'
+                    }),
+                    func: 'getWifi'
+                },
             ],
             menus: {
                 takeput: ['forward', 'back', 'left','right']
             },
             translation_map: {
                 'zh-cn': {
-                    flip: '翻滚 [TAKEPUT]'
-
+                    flip: '翻滚 [TAKEPUT]',
+                    getBattery: '电量',
+                    getSpeed: '电机速度',
+                    getTime:'电机运转时间',
+                    getWifi: 'WiFi 信噪比',
                 }
             }
         };
@@ -401,6 +434,20 @@ class TelloExtension {
         return this.report(cmd).then(ret => this.parseCmd(ret));
     }
 
+    getSpeed (args){
+        const cmd = 'speed?';
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    getTime (args){
+        const cmd = 'time?';
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    getWifi (args){
+        const cmd = 'wifi?';
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
 
     parseCmd (msg){
         msg = msg.toString();
