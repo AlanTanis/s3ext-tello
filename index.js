@@ -28,6 +28,10 @@ class TelloExtension {
         this.hostIP = '192.168.10.1';
         this.hostPort = 8889;
         this.rxport = 12345;
+
+        // Local Debugging
+        // this.hostIP = '127.0.0.1';
+        // this.hostPort = 8890;
     }
 
     write (data){
@@ -293,6 +297,34 @@ class TelloExtension {
                     func: 'flip'
                 },
                 {
+                    opcode: 'flyGo',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.flyGo',
+                        default: 'Go X:[X] Y:[Y] Z:[Z] Speed:[SPEED]'
+                    }),
+                    arguments: {
+                        X: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                    },
+                    func: 'flyGo'
+                },
+                {
                     opcode: 'flyStop',
                     blockType: BlockType.COMMAND,
 
@@ -302,6 +334,78 @@ class TelloExtension {
                     }),
                     func: 'flyStop'
                 },
+                // MissionPad 挑战卡
+                {
+                    opcode: 'mpadOn',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.mpadOn',
+                        default: 'MissionPad On'
+                    }),
+                    func: 'mpadOn'
+                },
+                {
+                    opcode: 'mpadOff',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.mpadOff',
+                        default: 'MissionPad Off'
+                    }),
+                    func: 'mpadOff'
+                },
+                {
+                    opcode: 'mpadDirection',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.mpadDirection',
+                        default: 'MissionPad Direction [VIEW]'
+                    }),
+                    arguments: {
+                        VIEW: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'Overview',
+                            menu: 'mdirections'
+                        }
+                    },
+                    func: 'mpadDirection'
+                },
+                {
+                    opcode: 'mpadGo',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.mpadGo',
+                        default: 'Go X:[X] Y:[Y] Z:[Z] Speed:[SPEED] MID:[MID]'
+                    }),
+                    arguments: {
+                        X: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        MID: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'm1',
+                            menu: 'mpads'
+                        }
+                    },
+                    func: 'mpadGo'
+                },
+                // Read Command 读取命令
                 {
                     opcode: 'getBattery',
                     blockType: BlockType.REPORTER,
@@ -344,10 +448,13 @@ class TelloExtension {
                 },
             ],
             menus: {
-                takeput: ['forward', 'back', 'left','right']
+                takeput: ['forward', 'back', 'left','right'],
+                mdirections: ['Overview', 'Frontview', 'Both'],
+                mpads: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm-1', 'm-2']
             },
             translation_map: {
                 'zh-cn': {
+                    command: '控制 Tello',
                     flyDown: '下降 [LEN]',
                     flip: '翻滚 [TAKEPUT]',
                     takeput: {
@@ -356,11 +463,25 @@ class TelloExtension {
                         left: '左翻',
                         right: '右翻'
                     },
+                    flyGo: 'Go X:[X] Y:[Y] Z:[Z] 速度:[SPEED]',
                     flyStop: '停止运动（悬停）',
                     getBattery: '电量',
                     getSpeed: '电机速度',
                     getTime:'电机运转时间',
                     getWifi: 'WiFi 信噪比',
+                    mpadOn: '打开 挑战卡探测',
+                    mpadOff: '关闭 挑战卡探测',
+                    mpadDirection: '探测视角 [VIEW]',
+                    mdirections: {
+                        Overview: '下视探测',
+                        Frontview: '前视探测',
+                        Both: '同时打开',
+                    },
+                    mpadGo: 'Go X:[X] Y:[Y] Z:[Z] 速度:[SPEED] 挑战卡ID:[MID]',
+                    mpads: {
+                        'm-1': '最快识别的挑战卡',
+                        'm-2': '最近的挑战卡'
+                    }
                 }
             }
         };
@@ -442,13 +563,51 @@ class TelloExtension {
         this.write(cmd);
     }
 
+    setSpeed (args){
+        const cmd = `speed ${args.LEN}`;
+        this.write(cmd);
+    }
+
+    flyGo (args){
+        const cmd = `go ${args.X} ${args.Y} ${args.Z} ${args.SPEED}`;
+        this.write(cmd);
+    }
+
     flyStop (args){
         const cmd = `stop`;
         this.write(cmd);
     }
 
-    setSpeed (args){
-        const cmd = `speed ${args.LEN}`;
+    // 挑战卡
+    mpadOn (args){
+        const cmd = `mon`;
+        this.write(cmd);
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    mpadOff (args){
+        const cmd = `moff`;
+        this.write(cmd);
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    mpadDirection (args){
+        let param = '0';
+        if (args.VIEW === 'Overview') {
+            param = '0';
+        }
+        else if (args.VIEW === 'Frontview') {
+            param = '1';
+        }
+        else {
+            param = '2';
+        }
+        const cmd = `mdirection ${param}`;
+        this.write(cmd);
+    }
+
+    mpadGo (args){
+        const cmd = `go ${args.X} ${args.Y} ${args.Z} ${args.SPEED} ${args.MID}`;
         this.write(cmd);
     }
 
