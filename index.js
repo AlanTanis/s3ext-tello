@@ -338,7 +338,14 @@ class TelloExtension {
             },
             translation_map: {
                 'zh-cn': {
+                    flyDown: '下降 [LEN]',
                     flip: '翻滚 [TAKEPUT]',
+                    takeput: {
+                        forward: '前翻',
+                        back: '后翻',
+                        left: '左翻',
+                        right: '右翻'
+                    },
                     getBattery: '电量',
                     getSpeed: '电机速度',
                     getTime:'电机运转时间',
