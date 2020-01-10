@@ -275,7 +275,7 @@ class TelloExtension {
                     },
                     func: 'setSpeed'
                 },
-                {//flip
+                {
                     opcode: 'flip',
                     blockType: BlockType.COMMAND,
 
@@ -291,6 +291,16 @@ class TelloExtension {
                         }
                     },
                     func: 'flip'
+                },
+                {
+                    opcode: 'flyStop',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.flyStop',
+                        default: 'STOP!'
+                    }),
+                    func: 'flyStop'
                 },
                 {
                     opcode: 'getBattery',
@@ -346,6 +356,7 @@ class TelloExtension {
                         left: '左翻',
                         right: '右翻'
                     },
+                    flyStop: '停止运动（悬停）',
                     getBattery: '电量',
                     getSpeed: '电机速度',
                     getTime:'电机运转时间',
@@ -428,6 +439,11 @@ class TelloExtension {
 
     rollCcw (args){
         const cmd = `ccw ${args.LEN}`;
+        this.write(cmd);
+    }
+
+    flyStop (args){
+        const cmd = `stop`;
         this.write(cmd);
     }
 
