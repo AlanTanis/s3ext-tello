@@ -620,7 +620,7 @@ class TelloExtension {
                         },
                         PASS: {
                             type: ArgumentType.STRING,
-                            defaultValue: '87038116'
+                            defaultValue: '12345678'
                         }
                     },
                     func: 'setWifi'
