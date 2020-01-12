@@ -327,6 +327,46 @@ class TelloExtension {
                     func: 'flyGo'
                 },
                 {
+                    opcode: 'flyCurve',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.flyCurve',
+                        default: 'Curve X1:[X1] Y1:[Y1] Z1:[Z1] X2:[X2] Y2:[Y2] Z2:[Z2] Speed:[SPEED]'
+                    }),
+                    arguments: {
+                        X1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        X2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                    },
+                    func: 'flyCurve'
+                },
+                {
                     opcode: 'flyStop',
                     blockType: BlockType.COMMAND,
 
@@ -407,6 +447,93 @@ class TelloExtension {
                     },
                     func: 'mpadGo'
                 },
+                {
+                    opcode: 'mpadCurve',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.mpadCurve',
+                        default: 'Curve X1:[X1] Y1:[Y1] Z1:[Z1] X2:[X2] Y2:[Y2] Z2:[Z2] Speed:[SPEED] MID:[MID]'
+                    }),
+                    arguments: {
+                        X1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z1: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        X2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z2: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        MID: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'm1',
+                            menu: 'mpads'
+                        }
+                    },
+                    func: 'mpadCurve'
+                },
+                {
+                    opcode: 'mpadJump',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.mpadJump',
+                        default: 'Jump X:[X] Y:[Y] Z:[Z] Speed:[SPEED] Yaw:[YAW] MID1:[MID1] MID2:[MID2]'
+                    }),
+                    arguments: {
+                        X: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Z: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        SPEED: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        YAW: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        MID1: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'm1',
+                            menu: 'mpads'
+                        },
+                        MID2: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'm1',
+                            menu: 'mpads'
+                        }
+                    },
+                    func: 'mpadJump'
+                },
                 // Read Command 读取命令
                 {
                     opcode: 'getBattery',
@@ -448,6 +575,56 @@ class TelloExtension {
                     }),
                     func: 'getWifi'
                 },
+                {
+                    opcode: 'getTof',
+                    blockType: BlockType.REPORTER,
+
+                    text: formatMessage({
+                        id: 'Tello.getTof',
+                        default: 'ToF Distance?'
+                    }),
+                    func: 'getTof'
+                },
+                {
+                    opcode: 'getBaro',
+                    blockType: BlockType.REPORTER,
+
+                    text: formatMessage({
+                        id: 'Tello.getBaro',
+                        default: 'Barometer?'
+                    }),
+                    func: 'getBaro'
+                },
+                {
+                    opcode: 'getMid',
+                    blockType: BlockType.REPORTER,
+
+                    text: formatMessage({
+                        id: 'Tello.getMid',
+                        default: 'Scan Mission Pad'
+                    }),
+                    func: 'getMid'
+                },
+                {
+                    opcode: 'setWifi',
+                    blockType: BlockType.COMMAND,
+
+                    text: formatMessage({
+                        id: 'Tello.setWifi',
+                        default: 'WiFi SSID:[SSID] PASS:[PASS]'
+                    }),
+                    arguments: {
+                        SSID: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'tello-87038116'
+                        },
+                        PASS: {
+                            type: ArgumentType.STRING,
+                            defaultValue: '87038116'
+                        }
+                    },
+                    func: 'setWifi'
+                },
             ],
             menus: {
                 takeput: ['forward', 'back', 'left','right'],
@@ -465,12 +642,16 @@ class TelloExtension {
                         left: '左翻',
                         right: '右翻'
                     },
-                    flyGo: 'Go X:[X] Y:[Y] Z:[Z] 速度:[SPEED]',
+                    flyGo: '前往 X:[X] Y:[Y] Z:[Z] 速度:[SPEED]',
+                    flyCurve: '弧线 X1:[X1] Y1:[Y1] Z1:[Z1] X2:[X2] Y2:[Y2] Z2:[Z2] Speed:[SPEED]',
                     flyStop: '停止运动（悬停）',
                     getBattery: '电量',
                     getSpeed: '电机速度',
                     getTime:'电机运转时间',
                     getWifi: 'WiFi 信噪比',
+                    getTof: 'ToF 距离',
+                    getBaro: '气压计测量高度',
+                    getMid: '当前检测挑战卡',
                     mpadOn: '打开 挑战卡探测',
                     mpadOff: '关闭 挑战卡探测',
                     mpadDirection: '探测视角 [VIEW]',
@@ -479,11 +660,14 @@ class TelloExtension {
                         Frontview: '前视探测',
                         Both: '同时打开',
                     },
-                    mpadGo: 'Go X:[X] Y:[Y] Z:[Z] 速度:[SPEED] 挑战卡ID:[MID]',
+                    mpadGo: '前往 X:[X] Y:[Y] Z:[Z] 速度:[SPEED] 挑战卡:[MID]',
+                    mpadCurve: '弧线 X1:[X1] Y1:[Y1] Z1:[Z1] X2:[X2] Y2:[Y2] Z2:[Z2] Speed:[SPEED] MID:[MID]',
+                    mpadJump: '跳跃 X:[X] Y:[Y] Z:[Z] Speed:[SPEED] Yaw:[YAW] MID1:[MID1] MID2:[MID2]',
                     mpads: {
                         'm-1': '最快识别的挑战卡',
                         'm-2': '最近的挑战卡'
-                    }
+                    },
+                    setWifi: '设置 WiFi SSID:[SSID] 密码:[PASS]',
                 }
             }
         };
@@ -575,6 +759,11 @@ class TelloExtension {
         this.write(cmd);
     }
 
+    flyCurve (args){
+        const cmd = `curve ${args.X1} ${args.Y1} ${args.Z1} ${args.X2} ${args.Y2} ${args.Z2} ${args.SPEED}`;
+        this.write(cmd);
+    }
+
     flyStop (args){
         const cmd = `stop`;
         this.write(cmd);
@@ -613,6 +802,16 @@ class TelloExtension {
         this.write(cmd);
     }
 
+    mpadCurve (args){
+        const cmd = `curve ${args.X1} ${args.Y1} ${args.Z1} ${args.X2} ${args.Y2} ${args.Z2} ${args.SPEED} ${args.MID}`;
+        this.write(cmd);
+    }
+
+    mpadJump (args){
+        const cmd = `jump ${args.X} ${args.Y} ${args.Z} ${args.SPEED} ${args.YAW} ${args.MID1} ${args.MID2}`;
+        this.write(cmd);
+    }
+
     getBattery (args){
         const cmd = 'battery?';
         return this.report(cmd).then(ret => this.parseCmd(ret));
@@ -631,6 +830,26 @@ class TelloExtension {
     getWifi (args){
         const cmd = 'wifi?';
         return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    getTof (args){
+        const cmd = 'tof?';
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    getBaro (args){
+        const cmd = 'baro?';
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    getMid (args){
+        const cmd = 'mid?';
+        return this.report(cmd).then(ret => this.parseCmd(ret));
+    }
+
+    setWifi (args){
+        const cmd = `wifi ${args.SSID} ${args.PASS}`;
+        this.write(cmd);
     }
 
     parseCmd (msg){
