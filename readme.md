@@ -1,9 +1,9 @@
-# Tello Extension for KittenBlock
+# Tello EDU Extension for KittenBlock
 
-KittenBlock 的 Tello 拓展插件。
+KittenBlock 的 Tello EDU 拓展插件。
 
 ## Screenshot
 
-![ScreenShot](/tello_screenshot.png)
+![ScreenShot](src/tello_screenshot.png)
 
 
