@@ -1,6 +1,6 @@
 {
-    "name": "Tello EDU",
+    "name": "Tello",
     "type": "robot",
-    "extensions": ["Tello EDU"],
+    "extensions": ["Tello"],
     "image": "src/tello_edu.png"
 }
